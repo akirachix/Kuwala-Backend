@@ -26,4 +26,8 @@ jobs:
           python manage.py migrate
       - name: Run tests
         run: |
+<<<<<<< feature/kuwala/cicd
           python manage.py test
+=======
+          python manage.py test
+>>>>>>> dev
