@@ -55,9 +55,13 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
     'single_sign',
-    'api',
     'users',
-    
+    'categories',
+    'api',
+    'pantry',
+    'ingredients',
+    'recipes'
+
 ]
 
 
