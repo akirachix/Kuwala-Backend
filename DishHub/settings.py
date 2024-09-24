@@ -12,18 +12,27 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 # 📁 webappexample/settings.py -----
 
-import os
+
 from dotenv import load_dotenv, find_dotenv
 import dj_database_url
-
 import os
 from pathlib import Path
 load_dotenv()
+
+from dotenv import load_dotenv
+import os
+from pathlib import Path
 
 
 import logging
 logging.basicConfig(level=logging.DEBUG)
 
+
+# Load environment definition file
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
+    
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATE_DIR = os.path.join(BASE_DIR, "Kuwala", "templates")
@@ -50,6 +59,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
@@ -62,7 +72,6 @@ INSTALLED_APPS = [
     'api',
     'DishHub',
     'recipes'
-
 ]
 
 
@@ -71,13 +80,14 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "corsheaders.middleware.CorsMiddleware",
-    'whitenoise.middleware.WhiteNoiseMiddleware'
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 
 ]
 
@@ -111,15 +121,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'DishHub.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 
 
 DATABASE_URL = os.getenv("DATABASE_URL")
@@ -197,23 +198,10 @@ AUTHENTICATION_BACKENDS = ('django.contrib.auth.backends.ModelBackend',)
 
 
 
-from datetime import timedelta
 
 
 
-SIMPLE_JWT = {
-    'AUTH_COOKIE': 'access_token',  # Cookie name for storing the access token
-    'AUTH_COOKIE_SECURE': False,    # Set to True in production
-    'AUTH_COOKIE_HTTP_ONLY': True,  # HTTP-only cookie to prevent JavaScript access
-    'AUTH_COOKIE_PATH': '/',        # Cookie available site-wide
-    'AUTH_COOKIE_SAMESITE': 'Lax',  # Adjust SameSite settings as needed
-}
 
-
-# Load environment definition file
-ENV_FILE = find_dotenv()
-if ENV_FILE:
-    load_dotenv(ENV_FILE)
 
 
 # Load Auth0 application settings into memory
@@ -222,13 +210,7 @@ AUTH0_CLIENT_ID = os.environ.get("AUTH0_CLIENT_ID","")
 AUTH0_CLIENT_SECRET = os.environ.get("AUTH0_CLIENT_SECRET","")
 REDIRECT_URI=os.environ.get("REDIRECT_URI","")
 
-
-
-
-
-
-
-
-
-
 AUTH_USER_MODEL = 'users.User'
+
+
+
