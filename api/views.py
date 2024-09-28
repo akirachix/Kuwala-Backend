@@ -1,3 +1,6 @@
+from datetime import timezone
+from django.utils import timezone
+from django.contrib.auth.hashers import make_password
 from rest_framework import status, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -276,16 +279,18 @@ class RegisterView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
+          
             logger.info(f'User registered successfully: {user.email}')
             return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
+        
         logger.error(f'User registration failed: {serializer.errors}')
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     def get(self, request):
         users = User.objects.all()
         serializer = UserSerializer(users, many=True)
         logger.info('Fetched user details successfully.')
         return Response(serializer.data, status=status.HTTP_200_OK)
-    
     
     
 class LoginView(APIView):
@@ -524,3 +529,5 @@ class SearchRecipeView(APIView):
         else:
             return JsonResponse({'error': 'Failed to fetch the recipe from MealDB.'}, status=response.status_code)
  
+
+
